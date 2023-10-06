@@ -5,6 +5,12 @@ ImageName=$(echo $Username"_img")
 ContainerName=$(echo $Username"_container")
 JupyterPort=8333
 
+if [ $# -eq 0 ] ; then 
+    echo "You need the parameter."
+    echo "./env.sh --help for more infomation"
+    exit 1
+fi
+
 if [ $1 == "start" ] ; then
     # create image
     if [ $(docker images -a | grep -w $ImageName | wc -l) -eq 0  ] ; then
@@ -30,6 +36,8 @@ if [ $1 == "start" ] ; then
 elif [ $1 == "stop" ] ; then # stop the container
     if ! docker stop $ContainerName > /dev/null 2>&1 ; then
         echo "There is a unexpected wrong when stop the '$ContainerName'"
+    elif [ $(docker ps | grep -w $ContainerName | wc -l) -eq 0 ] ; then
+        echo "The '$ContainerName' is not running."
     else
         echo "Stop the '$ContainerName' successfully!"
     fi
@@ -45,6 +53,13 @@ elif [ $1 == "rmi" ] ; then # remove the image
     else
         echo "Remove the '$ImageName' successfully!"
     fi
+elif [ $1 == "--help" ] ; then
+    echo ./env "parameter"
+    echo "start : to build or start the iamge and container"
+    echo "stop : to stop the container"
+    echo "rm : remove the conatiner"
+    echo "rmi : remove the iamge"
 else 
     echo "Wrong parameter!"
+    echo "./env.sh --help for more infomation"
 fi
