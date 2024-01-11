@@ -35,10 +35,10 @@ if [ $1 == "start" ] ; then
     fi
     
 elif [ $1 == "stop" ] ; then # stop the container
-    if ! docker stop $ContainerName > /dev/null 2>&1 ; then
-        echo "There is an unexpected wrong when stop the '$ContainerName'"
-    elif [ $(docker ps | grep -w $ContainerName | wc -l) -eq 0 ] ; then
+	if [ $(docker ps | grep -w $ContainerName | wc -l) -eq 0 ] ; then
         echo "The '$ContainerName' is not running."
+    elif ! docker stop $ContainerName > /dev/null 2>&1 ; then
+        echo "There is an unexpected wrong when stop the '$ContainerName'"
     else
         echo "Stop the '$ContainerName' successfully!"
     fi
@@ -55,7 +55,7 @@ elif [ $1 == "rmi" ] ; then # remove the image
         echo "Remove the '$ImageName' successfully!"
     fi
 elif [ $1 == "jupyter" ] ; then # open jupyter notebook
-    if ! jupyter notebook --ip=0.0.0.0 --port=$JupyterPort --no-browser ; then
+    if ! jupyter notebook --ip=0.0.0.0 --port=$JupyterPort --no-browser --allow-root ; then
         echo "There is an unexpected wrong when opening jupyter notebook"
     fi
 elif [ $1 == "--help" ] ; then
